@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Down RPG</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui-overlay">
+            <div id="player-stats">
+                <div class="stat-bar">
+                    <label>HP:</label>
+                    <div class="bar-container">
+                        <div id="hp-bar" class="bar hp-bar"></div>
+                    </div>
+                    <span id="hp-text">100/100</span>
+                </div>
+                <div class="stat-bar">
+                    <label>XP:</label>
+                    <div class="bar-container">
+                        <div id="xp-bar" class="bar xp-bar"></div>
+                    </div>
+                    <span id="xp-text">0/100</span>
+                </div>
+                <div class="stat-info">
+                    <span>Level: <span id="level-text">1</span></span>
+                    <span>Gold: <span id="gold-text">0</span></span>
+                </div>
+            </div>
+            <div id="message-log"></div>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

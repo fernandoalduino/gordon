@@ -1,0 +1,143 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #fff;
+}
+
+#game-container {
+    position: relative;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+#gameCanvas {
+    display: block;
+    background-color: #2a2a2a;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+#ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    pointer-events: none;
+    padding: 20px;
+}
+
+#player-stats {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 300px;
+    pointer-events: auto;
+}
+
+.stat-bar {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stat-bar label {
+    font-weight: bold;
+    min-width: 30px;
+}
+
+.bar-container {
+    flex: 1;
+    height: 20px;
+    background: rgba(50, 50, 50, 0.8);
+    border: 2px solid #444;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bar {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.hp-bar {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+}
+
+.xp-bar {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+}
+
+.stat-bar span {
+    min-width: 80px;
+    text-align: right;
+    font-size: 14px;
+}
+
+.stat-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+#message-log {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    max-height: 150px;
+    overflow-y: auto;
+    pointer-events: none;
+}
+
+.message {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    font-size: 14px;
+    animation: fadeIn 0.3s ease;
+}
+
+.message.damage {
+    color: #e74c3c;
+}
+
+.message.heal {
+    color: #2ecc71;
+}
+
+.message.critical {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.message.level-up {
+    color: #9b59b6;
+    font-weight: bold;
+}
+
+.message.info {
+    color: #3498db;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

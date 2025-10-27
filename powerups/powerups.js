@@ -13,7 +13,7 @@ export class PowerUp {
         this.isActive = true;
         this.owner = owner;
         this.timeRemaining = this.duration;
-        this.onActivate();
+        this.onActivate(owner);
     }
 
     deactivate() {
@@ -37,7 +37,7 @@ export class PowerUp {
     }
 
     // Métodos para serem sobrescritos pelas subclasses
-    onActivate() {}
+    onActivate(player) {}
     onDeactivate() {}
     onUpdate(deltaTime, enemies) {}
     render(ctx, camera) {}

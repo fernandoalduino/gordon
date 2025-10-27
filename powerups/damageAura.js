@@ -21,8 +21,9 @@ export class DamageAura extends PowerUp {
         this.affectedEnemies = new Set();
     }
 
-    onActivate() {
+    onActivate(player) {
         console.log(`${this.name} ativado!`);
+        this.damagePerSecond += player.damage;
         this.damageTimer = 0;
         this.pulseTime = 0;
         this.affectedEnemies.clear();
@@ -142,10 +143,10 @@ export class DamageAura extends PowerUp {
         const indicatorSize = 6;
         const pulse = Math.sin(this.pulseTime * 4) * 0.5 + 0.5;
         
-        ctx.fillStyle = `rgba(255, 50, 50, ${pulse})`;
+        /*ctx.fillStyle = `rgba(255, 50, 50, ${pulse})`;
         ctx.beginPath();
         ctx.arc(enemy.x, enemy.y - 30, indicatorSize, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fill();*/
         
         // Texto de dano
         ctx.fillStyle = `rgba(255, 100, 100, ${pulse})`;

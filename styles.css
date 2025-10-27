@@ -22,7 +22,7 @@ body {
 #gameCanvas {
     display: block;
     background-color: #2a2a2a;
-    image-rendering: pixelated;
+    image-rendering:pixelated;
     image-rendering: crisp-edges;
 }
 

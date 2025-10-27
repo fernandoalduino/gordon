@@ -17,8 +17,8 @@ export class Player extends Entity {
         this.inventory = [];
         
         // Sprite configuration (ready for sprite sheet)
-        this.spriteWidth = 64;
-        this.spriteHeight = 64;
+        this.spriteWidth = 128;
+        this.spriteHeight = 128;
         this.currentFrame = 0;
         this.frameCount = 4;
         this.frameTime = 0;
@@ -101,22 +101,7 @@ export class Player extends Entity {
 
     levelUp() {
         super.levelUp();
-        this.maxHealth = this.maxHealth * 1.1;
-        this.currentHealth = this.maxHealth; // Bonus gold on level up
-    }
-
-    addExp(amount) {
-        this.experience += amount;
-        if(this.experience >= this.experienceToNextLevel)
-        {
-            this.levelUp();
-        }
-        amount = amount - this.experienceToNextLevel;
-        console.log("amount:" + amount);
-        if(amount > this.experienceToNextLevel)
-            this.addExp(amount);
-        else
-        this.experience = amount;
+        this.gold += 50; // Bonus gold on level up
     }
 
     addGold(amount) {
@@ -129,6 +114,11 @@ export class Player extends Entity {
             return true;
         }
         return false;
+    }
+
+    addExp(amount) {
+        const levelsGained = this.gainExperience(amount);
+        return levelsGained;
     }
 
     addToInventory(item) {

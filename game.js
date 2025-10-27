@@ -6,6 +6,10 @@ import { Camera } from './camera.js';
 import { UIManager } from './ui/uiManager.js';
 import { CollisionDetector } from './physics/collisionDetector.js';
 import { ENTITY_SIZE, TILE_SIZE } from './constants.js';
+import { PowerUpManager } from './powerups/powerupManager.js';
+import { PowerUpPickup } from './powerups/powerupPickup.js';
+import { PowerUpUI } from './ui/powerupUI.js';
+
 
 export class Game {
     constructor(canvas, ctx) {
@@ -32,14 +36,33 @@ export class Game {
         this.uiManager = new UIManager();
         this.collisionDetector = new CollisionDetector(this.map);
         
-        this.enemies = [this.spawnEnemy(spawnPoint.x, spawnPoint.y)];
+        // Sistema de Power-ups
+        this.powerUpManager = new PowerUpManager(this.player);
+        this.powerUpUI = new PowerUpUI();
+        this.powerUpPickups = [];
+        
+        this.enemies = this.spawnEnemies(8);
+        
+        // Spawnar alguns power-ups no mapa
+        this.spawnPowerUpPickups(3);
         
         this.inputHandler.setupControls(this.player);
+        
+        // Tecla P para adicionar power-up (debug)
+        this.setupDebugControls();
+    }
+
+    setupDebugControls() {
+        window.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'p') {
+                this.powerUpManager.addPowerUp('damage_aura');
+                this.uiManager.addMessage('Aura de Dano ativada! (Debug)', 'info');
+            }
+        });
     }
 
     spawnEnemy(x = null, y = null) {
         const enemy = new Enemy(x, y, this.player.level);
-        console.log(enemy);
         return enemy;
     }
 
@@ -51,6 +74,14 @@ export class Game {
             enemies.push(enemy);
         }
         return enemies;
+    }
+
+    spawnPowerUpPickups(count) {
+        for (let i = 0; i < count; i++) {
+            const spawnPoint = this.mapGenerator.getRandomWalkablePosition();
+            const pickup = PowerUpPickup.createDamageAuraPickup(spawnPoint.x, spawnPoint.y);
+            this.powerUpPickups.push(pickup);
+        }
     }
 
     start() {
@@ -88,6 +119,22 @@ export class Game {
             this.player.y = prevY;
         }
         
+        // Atualizar power-ups (passa os inimigos para a aura de dano)
+        this.powerUpManager.update(deltaTime, this.enemies);
+        
+        // Atualizar pickups de power-ups
+        this.powerUpPickups.forEach(pickup => {
+            pickup.update(deltaTime, this.player);
+            
+            if (pickup.isCollected) {
+                this.powerUpManager.addPowerUp(pickup.powerUpId);
+                this.uiManager.addMessage(`${pickup.name} coletado!`, 'info');
+            }
+        });
+        
+        // Remover pickups coletados
+        this.powerUpPickups = this.powerUpPickups.filter(p => !p.isCollected);
+        
         this.enemies.forEach(enemy => {
             const enemyPrevX = enemy.x;
             const enemyPrevY = enemy.y;
@@ -120,12 +167,28 @@ export class Game {
             }
         });
         
+        // Remover inimigos mortos e spawnar power-ups
+        const deadEnemies = this.enemies.filter(enemy => enemy.isDead());
+        deadEnemies.forEach(enemy => {
+            // 20% de chance de dropar power-up
+            if (Math.random() < 0.2) {
+                const pickup = PowerUpPickup.createDamageAuraPickup(enemy.x, enemy.y);
+                this.powerUpPickups.push(pickup);
+            }
+        });
+        
         this.enemies = this.enemies.filter(enemy => !enemy.isDead());
+        
+        // Spawnar mais inimigos se houver poucos
+        if (this.enemies.length < 3) {
+            this.enemies.push(...this.spawnEnemies(2));
+        }
         
         this.checkChestInteraction();
         
         this.camera.follow(this.player);
         this.uiManager.update(this.player);
+        this.powerUpUI.update(this.powerUpManager);
     }
 
     checkEntityCollision(entity1, entity2) {
@@ -170,6 +233,7 @@ export class Game {
         this.isRunning = false;
         setTimeout(() => {
             if (confirm('Game Over! Jogar novamente?')) {
+                this.powerUpUI.destroy();
                 this.initializeGame();
                 this.start();
             }
@@ -184,6 +248,13 @@ export class Game {
         this.ctx.translate(-this.camera.x, -this.camera.y);
 
         this.renderMap();
+        
+        // Renderizar power-ups no chão
+        this.powerUpPickups.forEach(pickup => pickup.render(this.ctx));
+        
+        // Renderizar efeitos de power-ups (aura)
+        this.powerUpManager.render(this.ctx, this.camera);
+        
         this.renderEnemies();
         this.renderPlayer();
 

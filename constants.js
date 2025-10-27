@@ -4,7 +4,7 @@ export const ENTITY_SIZE = {
     PLAYER: {
         width: 24,
         height: 24,
-        renderSize: 24
+        renderSize: 128
     },
     ENEMY: {
         width: 24,
@@ -16,7 +16,7 @@ export const ENTITY_SIZE = {
 export const SPRITE_CONFIG = {
     width: 128,
     height: 128,
-    frameCount: 4,
+    frameCount: 20,
     directions: 8
 };
 

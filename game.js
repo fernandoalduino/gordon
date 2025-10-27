@@ -1,4 +1,4 @@
-import { Player } from './entities/player.js';
+import { Player } from './entities/player-with-sprite.js';
 import { Enemy } from './entities/enemy.js';
 import { MapGenerator } from './map/mapGenerator.js';
 import { InputHandler } from './input/inputHandler.js';
@@ -9,7 +9,8 @@ import { ENTITY_SIZE, TILE_SIZE } from './constants.js';
 import { PowerUpManager } from './powerups/powerupManager.js';
 import { PowerUpPickup } from './powerups/powerupPickup.js';
 import { PowerUpUI } from './ui/powerupUI.js';
-
+import { SpriteLoader } from './sprites/spriteLoader.js';
+import { SpriteRenderer } from './sprites/spriteRenderer.js';
 
 export class Game {
     constructor(canvas, ctx) {
@@ -17,11 +18,19 @@ export class Game {
         this.ctx = ctx;
         this.isRunning = false;
         this.lastTime = 0;
+        this.isLoading = true;
+        
+        // Sistema de sprites
+        this.spriteLoader = new SpriteLoader();
+        this.spriteRenderer = new SpriteRenderer();
         
         this.initializeGame();
     }
 
-    initializeGame() {
+    async initializeGame() {
+        // Carregar sprites
+        await this.loadSprites();
+        
         const seed = Math.floor(Math.random() * 1000000);
         console.log('Map Seed:', seed);
         
@@ -29,7 +38,10 @@ export class Game {
         this.map = this.mapGenerator.generate();
         
         const spawnPoint = this.mapGenerator.getSpawnPoint();
-        this.player = new Player(spawnPoint.x, spawnPoint.y);
+        
+        // Criar player com sprite
+        const playerSprite = this.spriteLoader.getSprite('player');
+        this.player = new Player(spawnPoint.x, spawnPoint.y, playerSprite, this.spriteRenderer);
         
         this.camera = new Camera(this.canvas.width, this.canvas.height, this.map.width * TILE_SIZE, this.map.height * TILE_SIZE);
         this.inputHandler = new InputHandler();
@@ -50,6 +62,25 @@ export class Game {
         
         // Tecla P para adicionar power-up (debug)
         this.setupDebugControls();
+        
+        this.isLoading = false;
+        console.log('✅ Jogo inicializado com sprites!');
+    }
+
+    async loadSprites() {
+        console.log('🎨 Carregando sprites...');
+        
+        // Carregar sprite sheet do player
+        // IMPORTANTE: Coloque o arquivo da sprite sheet na pasta do projeto
+        // e ajuste o caminho abaixo
+        this.spriteLoader.loadSprite('player', './sprites/tataruga.png');
+        
+        // Aguardar todos os sprites carregarem
+        const success = await this.spriteLoader.waitForAll();
+        
+        if (!success) {
+            console.warn('⚠️ Alguns sprites não carregaram. Usando renderização de fallback.');
+        }
     }
 
     setupDebugControls() {
@@ -85,6 +116,12 @@ export class Game {
     }
 
     start() {
+        if (this.isLoading) {
+            console.log('⏳ Aguardando carregamento...');
+            setTimeout(() => this.start(), 100);
+            return;
+        }
+        
         this.isRunning = true;
         this.lastTime = performance.now();
         this.gameLoop(this.lastTime);
@@ -235,12 +272,16 @@ export class Game {
             if (confirm('Game Over! Jogar novamente?')) {
                 this.powerUpUI.destroy();
                 this.initializeGame();
-                this.start();
             }
         }, 100);
     }
 
     render() {
+        if (this.isLoading) {
+            this.renderLoading();
+            return;
+        }
+
         this.ctx.fillStyle = '#1a1a1a';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -256,9 +297,24 @@ export class Game {
         this.powerUpManager.render(this.ctx, this.camera);
         
         this.renderEnemies();
-        this.renderPlayer();
+        
+        // Renderizar player com sprite
+        this.player.render(this.ctx, this.camera);
+        
+        // Renderizar health bar do player
+        this.renderHealthBar(this.player);
 
         this.ctx.restore();
+    }
+
+    renderLoading() {
+        this.ctx.fillStyle = '#1a1a1a';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        this.ctx.fillStyle = '#fff';
+        this.ctx.font = 'bold 24px Arial';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('Carregando sprites...', this.canvas.width / 2, this.canvas.height / 2);
     }
 
     renderMap() {
@@ -286,18 +342,6 @@ export class Game {
             case 2: return this.map.isChestOpened(x, y) ? '#8b4513' : '#d4af37'; // Chest
             default: return '#2d5016';
         }
-    }
-
-    renderPlayer() {
-        const halfSize = ENTITY_SIZE.PLAYER.renderSize / 2;
-        
-        this.ctx.fillStyle = '#3498db';
-        this.ctx.fillRect(this.player.x - halfSize, this.player.y - halfSize, ENTITY_SIZE.PLAYER.renderSize, ENTITY_SIZE.PLAYER.renderSize);
-        
-        this.ctx.fillStyle = '#2980b9';
-        this.ctx.fillRect(this.player.x - halfSize + 4, this.player.y - halfSize + 4, ENTITY_SIZE.PLAYER.renderSize - 8, ENTITY_SIZE.PLAYER.renderSize - 8);
-        
-        this.renderHealthBar(this.player);
     }
 
     renderEnemies() {

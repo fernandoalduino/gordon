@@ -8,7 +8,7 @@ export class SpriteRenderer {
             frameWidth: 32,     // Largura de cada frame (1344/8)
             frameHeight: 48,    // Altura de cada frame (768/4)
             columns: 8,          // 8 frames de animação
-            rows: 4,             // 4 direções
+            rows: 8,             // 4 direções
             scale: 1         // Escala de renderização (ajustado para ficar proporcional)
         };
     }
@@ -93,13 +93,13 @@ export class SpriteRenderer {
     getRowFromDirection(direction) {
         const directionMap = {
             0: 0,  // East -> Linha 2 (lado direito)
-            1: 0,  // Southeast -> Linha 1 (diagonal)
+            1: 6,  // Southeast -> Linha 1 (diagonal)
             2: 2,  // South -> Linha 0 (frente)
-            3: 0,  // Southwest -> Linha 1 (diagonal, com flip)
+            3: 6,  // Southwest -> Linha 1 (diagonal, com flip)
             4: 0,  // West -> Linha 2 (lado, com flip)
-            5: 0,  // Northwest -> Linha 1 (diagonal, com flip)
+            5: 4,  // Northwest -> Linha 1 (diagonal, com flip)
             6: 1,  // North -> Linha 3 (costas)
-            7: 0   // Northeast -> Linha 1 (diagonal)
+            7: 4   // Northeast -> Linha 1 (diagonal)
         };
         
         return directionMap[direction] || 0;

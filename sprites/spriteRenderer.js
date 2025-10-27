@@ -5,11 +5,11 @@ export class SpriteRenderer {
         // Tamanho total aproximado: 1344x768 pixels
         // Cada frame: 168x192 pixels
         this.config = {
-            frameWidth: 168,     // Largura de cada frame (1344/8)
-            frameHeight: 192,    // Altura de cada frame (768/4)
+            frameWidth: 32,     // Largura de cada frame (1344/8)
+            frameHeight: 48,    // Altura de cada frame (768/4)
             columns: 8,          // 8 frames de animação
             rows: 4,             // 4 direções
-            scale: 0.35          // Escala de renderização (ajustado para ficar proporcional)
+            scale: 1         // Escala de renderização (ajustado para ficar proporcional)
         };
     }
 
@@ -41,7 +41,7 @@ export class SpriteRenderer {
         
         // Centralizar o sprite na posição
         const renderX = x - renderWidth / 2;
-        const renderY = y - renderHeight / 2;
+        const renderY = y - renderHeight / 1.5;
 
         // Habilitar suavização de imagem para pixel art
         ctx.imageSmoothingEnabled = false;
@@ -92,14 +92,14 @@ export class SpriteRenderer {
      */
     getRowFromDirection(direction) {
         const directionMap = {
-            0: 2,  // East -> Linha 2 (lado direito)
-            1: 1,  // Southeast -> Linha 1 (diagonal)
-            2: 0,  // South -> Linha 0 (frente)
-            3: 1,  // Southwest -> Linha 1 (diagonal, com flip)
-            4: 2,  // West -> Linha 2 (lado, com flip)
-            5: 1,  // Northwest -> Linha 1 (diagonal, com flip)
-            6: 3,  // North -> Linha 3 (costas)
-            7: 1   // Northeast -> Linha 1 (diagonal)
+            0: 0,  // East -> Linha 2 (lado direito)
+            1: 0,  // Southeast -> Linha 1 (diagonal)
+            2: 2,  // South -> Linha 0 (frente)
+            3: 0,  // Southwest -> Linha 1 (diagonal, com flip)
+            4: 0,  // West -> Linha 2 (lado, com flip)
+            5: 0,  // Northwest -> Linha 1 (diagonal, com flip)
+            6: 1,  // North -> Linha 3 (costas)
+            7: 0   // Northeast -> Linha 1 (diagonal)
         };
         
         return directionMap[direction] || 0;

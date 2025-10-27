@@ -53,7 +53,7 @@ export class Game {
         this.powerUpUI = new PowerUpUI();
         this.powerUpPickups = [];
         
-        this.enemies = this.spawnEnemies(8);
+        this.enemies = this.spawnEnemies(80);
         
         // Spawnar alguns power-ups no mapa
         this.spawnPowerUpPickups(3);
@@ -73,7 +73,7 @@ export class Game {
         // Carregar sprite sheet do player
         // IMPORTANTE: Coloque o arquivo da sprite sheet na pasta do projeto
         // e ajuste o caminho abaixo
-        this.spriteLoader.loadSprite('player', './sprites/tataruga.png');
+        this.spriteLoader.loadSprite('player', './sprites/viado.png');
         
         // Aguardar todos os sprites carregarem
         const success = await this.spriteLoader.waitForAll();

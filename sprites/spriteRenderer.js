@@ -1,9 +1,6 @@
 export class SpriteRenderer {
     constructor() {
-        // Configuração da sprite sheet da tartaruga ninja
-        // Analisando a imagem: 8 colunas x 4 linhas
-        // Tamanho total aproximado: 1344x768 pixels
-        // Cada frame: 168x192 pixels
+        // Configuração da sprite 
         this.config = {
             frameWidth: 32,     // Largura de cada frame (1344/8)
             frameHeight: 48,    // Altura de cada frame (768/4)

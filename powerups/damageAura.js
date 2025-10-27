@@ -6,7 +6,7 @@ export class DamageAura extends PowerUp {
             id: 'damage_aura',
             name: 'Aura de Dano',
             description: 'Causa dano aos inimigos próximos',
-            duration: 30 // 30 segundos
+            duration: Infinity // 30 segundos
         });
 
         this.radius = 100;
@@ -16,7 +16,7 @@ export class DamageAura extends PowerUp {
         
         // Efeitos visuais
         this.pulseTime = 0;
-        this.pulseSpeed = 2;
+        this.pulseSpeed = this.damageInterval;
         this.color = { r: 255, g: 100, b: 100 };
         this.affectedEnemies = new Set();
     }
@@ -34,10 +34,10 @@ export class DamageAura extends PowerUp {
         this.affectedEnemies.clear();
     }
 
-    onUpdate(deltaTime, enemies) {
+    onUpdate(deltaTime, enemies, player) {
         this.damageTimer += deltaTime;
         this.pulseTime += deltaTime * this.pulseSpeed;
-
+        //this.damagePerSecond += player.damage;          
         if (this.damageTimer >= this.damageInterval) {
             this.damageTimer = 0;
             this.applyDamageToNearbyEnemies(enemies);

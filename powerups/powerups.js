@@ -22,8 +22,10 @@ export class PowerUp {
         this.owner = null;
     }
 
-    update(deltaTime, enemies = []) {
-        if (!this.isActive) return;
+    update(deltaTime, enemies = [], owner) {
+        if (!this.isActive){
+            return;
+        }
 
         if (this.duration !== Infinity) {
             this.timeRemaining -= deltaTime;
@@ -33,13 +35,13 @@ export class PowerUp {
             }
         }
 
-        this.onUpdate(deltaTime, enemies);
+        this.onUpdate(deltaTime, enemies, owner);
     }
 
     // Métodos para serem sobrescritos pelas subclasses
     onActivate(player) {}
     onDeactivate() {}
-    onUpdate(deltaTime, enemies) {}
+    onUpdate(deltaTime, enemies, owner) {}
     render(ctx, camera) {}
 
     getTimeRemainingPercent() {

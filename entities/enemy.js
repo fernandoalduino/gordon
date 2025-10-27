@@ -6,7 +6,7 @@ export class Enemy extends Entity {
         super(x, y, stats);
         
         this.attackCooldown = 0.1
-        this.aggroRange = 200;
+        this.aggroRange = Infinity;
         this.attackRange = 27;
         this.isAggro = false;
         this.wanderTime = 0;
@@ -52,7 +52,6 @@ export class Enemy extends Entity {
                 this.moveTowards(player);
             } else {
                 this.setVelocity(0, 0);
-                console.log(distanceToPlayer);
             }
         } else {
             this.wander(deltaTime);

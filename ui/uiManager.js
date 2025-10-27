@@ -22,7 +22,7 @@ export class UIManager {
     updateHealthBar(player) {
         const healthPercent = (player.currentHealth / player.maxHealth) * 100;
         this.hpBar.style.width = `${healthPercent}%`;
-        this.hpText.textContent = `${Math.ceil(player.currentHealth)}/${player.maxHealth}`;
+        this.hpText.textContent = `${Math.ceil(player.currentHealth)}/${Math.ceil(player.maxHealth)}`;
     }
 
     updateExperienceBar(player) {

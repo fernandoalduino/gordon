@@ -32,16 +32,22 @@ export class Game {
         this.uiManager = new UIManager();
         this.collisionDetector = new CollisionDetector(this.map);
         
-        this.enemies = this.spawnEnemies(80);
+        this.enemies = [this.spawnEnemy(spawnPoint.x, spawnPoint.y)];
         
         this.inputHandler.setupControls(this.player);
+    }
+
+    spawnEnemy(x = null, y = null) {
+        const enemy = new Enemy(x, y, this.player.level);
+        console.log(enemy);
+        return enemy;
     }
 
     spawnEnemies(count) {
         const enemies = [];
         for (let i = 0; i < count; i++) {
             const spawnPoint = this.mapGenerator.getRandomWalkablePosition();
-            const enemy = new Enemy(spawnPoint.x, spawnPoint.y, 1);
+            const enemy = this.spawnEnemy(spawnPoint.x, spawnPoint.y);
             enemies.push(enemy);
         }
         return enemies;
@@ -147,6 +153,7 @@ export class Game {
                             this.map.openChest(tileX, tileY);
                             
                             const reward = Math.floor(Math.random() * 100) + 50;
+                            this.player.addExp(1000);
                             this.player.gold += reward;
                             this.uiManager.addMessage(`Baú aberto! Ganhou ${reward} de ouro (custo: ${chestCost})`, 'info');
                         } else {

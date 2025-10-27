@@ -5,8 +5,9 @@ export class Enemy extends Entity {
         const stats = Enemy.generateStatsForLevel(level);
         super(x, y, stats);
         
+        this.attackCooldown = 0.1
         this.aggroRange = 200;
-        this.attackRange = 40;
+        this.attackRange = 27;
         this.isAggro = false;
         this.wanderTime = 0;
         this.wanderDuration = 2;
@@ -51,6 +52,7 @@ export class Enemy extends Entity {
                 this.moveTowards(player);
             } else {
                 this.setVelocity(0, 0);
+                console.log(distanceToPlayer);
             }
         } else {
             this.wander(deltaTime);

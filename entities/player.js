@@ -101,7 +101,22 @@ export class Player extends Entity {
 
     levelUp() {
         super.levelUp();
-        this.gold += 50; // Bonus gold on level up
+        this.maxHealth = this.maxHealth * 1.1;
+        this.currentHealth = this.maxHealth; // Bonus gold on level up
+    }
+
+    addExp(amount) {
+        this.experience += amount;
+        if(this.experience >= this.experienceToNextLevel)
+        {
+            this.levelUp();
+        }
+        amount = amount - this.experienceToNextLevel;
+        console.log("amount:" + amount);
+        if(amount > this.experienceToNextLevel)
+            this.addExp(amount);
+        else
+        this.experience = amount;
     }
 
     addGold(amount) {

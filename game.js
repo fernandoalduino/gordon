@@ -158,7 +158,7 @@ export class Game {
         }
         
         // Atualizar power-ups (passa os inimigos para a aura de dano)
-        this.powerUpManager.update(deltaTime, this.enemies);
+        this.powerUpManager.update(deltaTime, this.enemies, this.player);
         
         // Atualizar pickups de power-ups
         this.powerUpPickups.forEach(pickup => {

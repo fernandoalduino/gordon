@@ -56,10 +56,10 @@ export class PowerUpManager {
         return false;
     }
 
-    update(deltaTime, enemies) {
+    update(deltaTime, enemies, player) {
         // Atualizar todos os power-ups ativos
         this.activePowerUps.forEach(powerUp => {
-            powerUp.update(deltaTime, enemies);
+            powerUp.update(deltaTime, enemies, player);
         });
 
         // Remover power-ups que expiraram

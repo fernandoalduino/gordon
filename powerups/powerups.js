@@ -34,7 +34,7 @@ export class PowerUp {
                 return;
             }
         }
-
+        
         this.onUpdate(deltaTime, enemies, owner);
     }
 
